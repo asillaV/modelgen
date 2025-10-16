@@ -8,7 +8,7 @@ ModelGen is a self-contained tool for rapid prototyping of machine learning mode
 
 ## GUI Preview
 
-![ModelGen GUI Preview](assets/GUI_example.png)
+![ModelGen GUI Preview](assets/GUI example.png)
 
 ## Features
 
