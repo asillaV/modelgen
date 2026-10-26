@@ -85,7 +85,9 @@ def detect_delimiter(file_path: Path, encoding: str) -> str:
         with open(file_path, "r", encoding=encoding) as f:
             sample = f.read(8192)
             sniffer = csv.Sniffer()
-            delimiter = sniffer.sniff(sample).delimiter
+            # Restrict candidates: without this, a single-column numeric file
+            # makes the sniffer pick the decimal point as delimiter.
+            delimiter = sniffer.sniff(sample, delimiters=",;\t|").delimiter
             logger.info(f"Detected delimiter: '{delimiter}'")
             return delimiter
     except Exception as e:

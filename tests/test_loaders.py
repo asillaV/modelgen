@@ -3,10 +3,9 @@
 import tempfile
 from pathlib import Path
 
-import pandas as pd
 import pytest
 
-from modelgen.io.loaders import detect_delimiter, detect_encoding, load_csv
+from modelgen.io.loaders import load_csv
 
 
 def test_load_csv_basic():
@@ -30,3 +29,14 @@ def test_load_csv_missing_file():
     """Test loading non-existent file raises error."""
     with pytest.raises(FileNotFoundError):
         load_csv(Path("nonexistent.csv"))
+
+
+def test_single_numeric_column_is_not_split_on_decimal_point(tmp_path):
+    """A one-column file of decimals must load as one float column."""
+    from modelgen.io.loaders import load_csv
+
+    path = tmp_path / "signal.csv"
+    path.write_text("acc\n0.125\n-1.5\n2.75\n0.5\n")
+    df, _ = load_csv(path)
+    assert list(df.columns) == ["acc"]
+    assert df["acc"].tolist() == [0.125, -1.5, 2.75, 0.5]

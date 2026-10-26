@@ -1,6 +1,6 @@
 # ModelGen
 
-A generic CSV model generator with RandomForest baseline for regression and classification tasks.
+A generic CSV model generator with RandomForest baseline for regression and classification tasks, with vibration feature extraction for predictive maintenance.
 
 ## Overview
 
@@ -19,6 +19,18 @@ ModelGen is a self-contained tool for rapid prototyping of machine learning mode
 - **Comprehensive Artifacts**: Saves model.pkl, predictions.csv, report.json, and report.png
 - **Visualization**: Overlay plots, moving averages, and feature importance charts
 - **Dual Interface**: Command-line (argparse) and GUI (customtkinter with tkinter fallback)
+- **Vibration Features**: Windowed time, frequency and envelope features (RMS, kurtosis, crest factor, band energies, envelope amplitude at bearing defect frequencies) via `modelgen features` or `modelgen.signal.features`
+
+## Predictive Maintenance Example
+
+Bearing fault classification on the CWRU dataset (normal, inner race, ball, outer race), evaluated with a random split and with leave-one-load-out (train on three motor loads, test on the unseen fourth):
+
+| Features | Random split F1 | Leave-one-load-out F1 (mean / worst fold) |
+|---|---|---|
+| time + spectral (20) | 0.997 | 0.950 / 0.882 |
+| time + spectral + envelope (24) | 0.999 | 0.952 / 0.910 |
+
+Details, figures and limits: [examples/predictive_maintenance](examples/predictive_maintenance/README.md).
 
 ## Installation
 
@@ -105,9 +117,12 @@ modelgen/
 │  │  ├─ train.py           # RandomForest training (regression/classification)
 │  │  ├─ evaluate.py        # Metrics calculation (R²/MSE/MAE for reg, Acc/F1 for cla)
 │  │  └─ artifacts.py       # Save/load model, predictions, report
+│  ├─ signal/
+│  │  └─ features.py        # Vibration features (time, spectral, envelope)
 │  └─ viz/
 │     └─ plots.py           # Visualization (overlay, moving average, feature importance)
 ├─ examples/
+│  ├─ predictive_maintenance/  # CWRU bearing fault example
 │  ├─ regression_example.csv
 │  └─ classification_example.csv
 ├─ tests/
