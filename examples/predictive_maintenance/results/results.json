@@ -1,0 +1,132 @@
+{
+  "time + spectral": {
+    "n_features": 20,
+    "random_split": {
+      "f1_macro": 0.9974964400911752,
+      "accuracy": 0.9973118279569892
+    },
+    "leave_one_load_out": {
+      "f1_macro": 0.9497543081635029,
+      "f1_macro_min": 0.8820546024682787,
+      "accuracy": 0.944108984849593,
+      "folds": [
+        {
+          "test_load_hp": 0,
+          "f1_macro": 0.8820546024682787,
+          "accuracy": 0.8660578386605784
+        },
+        {
+          "test_load_hp": 1,
+          "f1_macro": 0.9298459950769351,
+          "accuracy": 0.9243902439024391
+        },
+        {
+          "test_load_hp": 2,
+          "f1_macro": 0.9928672890226293,
+          "accuracy": 0.9926829268292683
+        },
+        {
+          "test_load_hp": 3,
+          "f1_macro": 0.9942493460861687,
+          "accuracy": 0.9933049300060864
+        }
+      ],
+      "pooled": {
+        "accuracy": 0.9578853046594982,
+        "f1_macro": 0.9627686902960811,
+        "confusion_matrix": {
+          "ball": {
+            "ball": 1222,
+            "inner_race": 0,
+            "normal": 0,
+            "outer_race": 7
+          },
+          "inner_race": {
+            "ball": 20,
+            "inner_race": 1019,
+            "normal": 0,
+            "outer_race": 148
+          },
+          "normal": {
+            "ball": 0,
+            "inner_race": 0,
+            "normal": 409,
+            "outer_race": 0
+          },
+          "outer_race": {
+            "ball": 59,
+            "inner_race": 1,
+            "normal": 0,
+            "outer_race": 2695
+          }
+        },
+        "n_classes": 4
+      }
+    }
+  },
+  "time + spectral + envelope": {
+    "n_features": 24,
+    "random_split": {
+      "f1_macro": 0.9985333087964666,
+      "accuracy": 0.9982078853046595
+    },
+    "leave_one_load_out": {
+      "f1_macro": 0.9520512676841817,
+      "f1_macro_min": 0.909716217677025,
+      "accuracy": 0.9472312694194527,
+      "folds": [
+        {
+          "test_load_hp": 0,
+          "f1_macro": 0.909716217677025,
+          "accuracy": 0.8797564687975646
+        },
+        {
+          "test_load_hp": 1,
+          "f1_macro": 0.9112440689253309,
+          "accuracy": 0.9231707317073171
+        },
+        {
+          "test_load_hp": 2,
+          "f1_macro": 0.9984700002353846,
+          "accuracy": 0.9981707317073171
+        },
+        {
+          "test_load_hp": 3,
+          "f1_macro": 0.9887747838989862,
+          "accuracy": 0.9878271454656117
+        }
+      ],
+      "pooled": {
+        "accuracy": 0.9591397849462365,
+        "f1_macro": 0.9595907127067546,
+        "confusion_matrix": {
+          "ball": {
+            "ball": 1226,
+            "inner_race": 0,
+            "normal": 0,
+            "outer_race": 3
+          },
+          "inner_race": {
+            "ball": 128,
+            "inner_race": 1050,
+            "normal": 0,
+            "outer_race": 9
+          },
+          "normal": {
+            "ball": 0,
+            "inner_race": 0,
+            "normal": 409,
+            "outer_race": 0
+          },
+          "outer_race": {
+            "ball": 88,
+            "inner_race": 0,
+            "normal": 0,
+            "outer_race": 2667
+          }
+        },
+        "n_classes": 4
+      }
+    }
+  }
+}

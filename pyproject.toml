@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "modelgen"
-version = "0.1.0"
+version = "0.2.0"
 description = "Generic CSV model generator with RandomForest baseline"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -12,7 +12,7 @@ license = {text = "MIT"}
 authors = [
     {name = "Francesco Vallisa"}
 ]
-keywords = ["machine-learning", "csv", "random-forest", "data-science"]
+keywords = ["machine-learning", "csv", "random-forest", "data-science", "predictive-maintenance", "vibration"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -31,6 +31,7 @@ dependencies = [
     "matplotlib>=3.7.0",
     "chardet>=5.0.0",
     "joblib>=1.3.0",
+    "scipy>=1.10.0",
 ]
 
 [project.optional-dependencies]

@@ -3,7 +3,6 @@
 import argparse
 import sys
 from pathlib import Path
-from typing import Optional
 
 from modelgen import logging_setup
 from modelgen.io.loaders import load_csv
@@ -12,6 +11,7 @@ from modelgen.ml.artifacts import create_full_report, save_all_artifacts
 from modelgen.ml.evaluate import evaluate_model
 from modelgen.ml.pipelines import prepare_features, prepare_target
 from modelgen.ml.train import get_feature_importance, predict, train_model
+from modelgen.signal.features import CWRU_6205_DE_ORDERS, extract_features
 from modelgen.viz.plots import create_report_figure, save_report_figure
 
 
@@ -52,7 +52,10 @@ def train_command(args: argparse.Namespace) -> int:
 
         # Prepare features and target
         X, numeric_features, categorical_features = prepare_features(
-            df_train, feature_columns, schema.numeric_columns, schema.categorical_columns
+            df_train,
+            feature_columns,
+            schema.numeric_columns,
+            schema.categorical_columns,
         )
         y = prepare_target(df_train, args.target, task=args.task)
 
@@ -136,6 +139,51 @@ def train_command(args: argparse.Namespace) -> int:
         return 1
 
 
+BEARINGS = {"cwru-6205-de": CWRU_6205_DE_ORDERS}
+
+
+def features_command(args: argparse.Namespace) -> int:
+    """Execute the features command: signal CSV -> feature CSV.
+
+    Args:
+        args: Parsed command-line arguments.
+
+    Returns:
+        Exit code (0 for success, non-zero for failure).
+    """
+    try:
+        logging_setup.setup_logging(level="INFO")
+        df, _ = load_csv(args.input)
+        if args.column not in df.columns:
+            raise ValueError(f"Column '{args.column}' not found in {args.input}")
+
+        defect_orders = BEARINGS[args.bearing] if args.bearing else None
+        if defect_orders is not None and args.shaft_hz is None:
+            raise ValueError("--bearing requires --shaft-hz")
+
+        feats = extract_features(
+            df[args.column].to_numpy(dtype=float),
+            fs=args.fs,
+            window=args.window,
+            step=args.step,
+            n_bands=args.bands,
+            shaft_hz=args.shaft_hz,
+            defect_orders=defect_orders,
+            envelope_band=tuple(args.env_band) if args.env_band else None,
+        )
+        if args.label is not None:
+            feats["label"] = args.label
+
+        args.out.parent.mkdir(parents=True, exist_ok=True)
+        feats.to_csv(args.out, index=False)
+        print(f"{len(feats)} windows x {feats.shape[1]} columns saved to {args.out}")
+        return 0
+
+    except Exception as e:
+        print(f"Error: {e}", file=sys.stderr)
+        return 1
+
+
 def main() -> int:
     """Main entry point for the CLI.
 
@@ -204,6 +252,46 @@ def main() -> int:
         help="Output directory for artifacts (default: output)",
     )
 
+    # Features command
+    feat_parser = subparsers.add_parser(
+        "features", help="Extract vibration features from a signal CSV"
+    )
+    feat_parser.add_argument(
+        "--input", type=Path, required=True, help="Signal CSV file"
+    )
+    feat_parser.add_argument("--column", required=True, help="Signal column name")
+    feat_parser.add_argument(
+        "--fs", type=float, required=True, help="Sampling frequency in Hz"
+    )
+    feat_parser.add_argument(
+        "--window", type=int, default=4096, help="Window length in samples"
+    )
+    feat_parser.add_argument(
+        "--step", type=int, help="Step between windows (default: window)"
+    )
+    feat_parser.add_argument(
+        "--bands", type=int, default=8, help="Number of spectral bands"
+    )
+    feat_parser.add_argument("--shaft-hz", type=float, help="Shaft frequency in Hz")
+    feat_parser.add_argument(
+        "--bearing",
+        choices=sorted(BEARINGS),
+        help="Bearing geometry for envelope features",
+    )
+    feat_parser.add_argument(
+        "--env-band",
+        type=float,
+        nargs=2,
+        metavar=("LOW", "HIGH"),
+        help="Envelope pass band in Hz",
+    )
+    feat_parser.add_argument(
+        "--label", help="Optional constant label added as a column"
+    )
+    feat_parser.add_argument(
+        "--out", type=Path, required=True, help="Output feature CSV"
+    )
+
     # Parse arguments
     args = parser.parse_args()
 
@@ -215,6 +303,8 @@ def main() -> int:
     if args.command == "train":
         args.task = "regression" if args.task == "reg" else "classification"
         return train_command(args)
+    if args.command == "features":
+        return features_command(args)
 
     return 0
 

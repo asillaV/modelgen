@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
+## [0.2.0] - 2026-10-26
+
+### Added
+- `modelgen.signal.features`: windowed vibration features (time domain, spectral bands, envelope amplitude at bearing defect frequencies)
+- `modelgen features` CLI command: signal CSV to feature CSV
+- Predictive maintenance example on the CWRU bearing dataset with random split vs leave-one-load-out evaluation
+- Tests for feature extraction and for the example
+- GitHub Actions CI running the test suite on Python 3.11 and 3.12
+
+### Fixed
+- CSV delimiter detection split single-column numeric files on the decimal point
+
 ## [0.1.0] - 2025-01-XX
 
 ### Added
