@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = {text = "MIT"}
 authors = [
-    {name = "ModelGen Contributors"}
+    {name = "Francesco Vallisa"}
 ]
 keywords = ["machine-learning", "csv", "random-forest", "data-science"]
 classifiers = [
@@ -47,8 +47,8 @@ dev = [
 modelgen = "modelgen.cli:main"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/modelgen"
-Repository = "https://github.com/yourusername/modelgen"
+Homepage = "https://github.com/asillaV/modelgen"
+Repository = "https://github.com/asillaV/modelgen"
 
 [tool.setuptools.packages.find]
 where = ["src"]
